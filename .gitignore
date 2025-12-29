@@ -1,0 +1,21 @@
+# Java / Maven
+target/
+*.log
+
+# IntelliJ
+.idea/
+*.iml
+out/
+
+# Mac
+.DS_Store
+
+# Python
+python-classifier/venv/
+python-classifier/__pycache__/
+python-classifier/*.pyc
+.env
+
+# Big model folders (don't upload 400MB+ to GitHub)
+python-classifier/clause_classifier_legalbert/
+python-classifier/clause_classifier_ckpt/

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Contract Explainer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        :root {
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+          background: #0f172a;
+          color: #e5e7eb;
+        }
+
+        body {
+          margin: 0;
+          padding: 0;
+          min-height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+        }
+
+        .app {
+          max-width: 900px;
+          width: 100%;
+          padding: 24px;
+          box-sizing: border-box;
+        }
+
+        h1 {
+          font-size: 1.8rem;
+          margin-bottom: 0.25rem;
+        }
+
+        h2 {
+          font-size: 1.2rem;
+          margin-top: 0;
+        }
+
+        .subtitle {
+          color: #9ca3af;
+          margin-bottom: 1.5rem;
+        }
+
+        .card {
+          background: #020617;
+          border-radius: 16px;
+          padding: 16px 18px;
+          margin-bottom: 18px;
+          border: 1px solid #1f2937;
+          box-shadow: 0 18px 40px rgba(15, 23, 42, 0.6);
+        }
+
+        .card-title {
+          font-weight: 600;
+          margin-bottom: 8px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .badge {
+          font-size: 0.75rem;
+          padding: 2px 8px;
+          border-radius: 999px;
+          border: 1px solid #4b5563;
+          color: #9ca3af;
+        }
+
+        label {
+          display: block;
+          font-size: 0.9rem;
+          margin-bottom: 6px;
+          color: #e5e7eb;
+        }
+
+        input[type="file"],
+        input[type="text"],
+        textarea {
+          width: 100%;
+          box-sizing: border-box;
+          font: inherit;
+          border-radius: 10px;
+          border: 1px solid #4b5563;
+          padding: 8px 10px;
+          background: #020617;
+          color: #e5e7eb;
+          outline: none;
+        }
+
+        input[type="file"] {
+          padding: 6px 10px;
+          background: #020617;
+        }
+
+        input[type="file"]::file-selector-button {
+          font: inherit;
+          padding: 6px 10px;
+          margin-right: 10px;
+          border-radius: 8px;
+          border: none;
+          background: #1d4ed8;
+          color: white;
+          cursor: pointer;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+          background: #2563eb;
+        }
+
+        input[type="text"],
+        textarea {
+          margin-top: 4px;
+        }
+
+        textarea {
+          resize: vertical;
+          min-height: 70px;
+        }
+
+        .btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          border-radius: 999px;
+          border: none;
+          padding: 8px 16px;
+          margin-top: 10px;
+          font: inherit;
+          cursor: pointer;
+          background: #1d4ed8;
+          color: white;
+        }
+
+        .btn.secondary {
+          background: #111827;
+          border: 1px solid #374151;
+          color: #e5e7eb;
+        }
+
+        .btn:disabled {
+          opacity: 0.6;
+          cursor: default;
+        }
+
+        .btn:hover:not(:disabled) {
+          background: #2563eb;
+        }
+
+        .btn.secondary:hover:not(:disabled) {
+          background: #1f2937;
+        }
+
+        .grid {
+          display: grid;
+          grid-template-columns: 2fr 3fr;
+          gap: 16px;
+        }
+
+        .label-text {
+          font-size: 0.8rem;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          color: #9ca3af;
+          margin-bottom: 4px;
+        }
+
+        .mono {
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+          font-size: 0.85rem;
+          white-space: pre-wrap;
+          word-break: break-word;
+        }
+
+        .pill {
+          display: inline-flex;
+          align-items: center;
+          padding: 3px 8px;
+          border-radius: 999px;
+          font-size: 0.8rem;
+          background: #111827;
+          border: 1px solid #4b5563;
+          color: #e5e7eb;
+          gap: 4px;
+        }
+
+        .pill-label {
+          font-weight: 600;
+        }
+
+        .muted {
+          color: #9ca3af;
+          font-size: 0.85rem;
+        }
+
+        .status {
+          font-size: 0.8rem;
+          color: #9ca3af;
+          margin-top: 6px;
+        }
+
+        .answer-block {
+          background: #020617;
+          border-radius: 12px;
+          padding: 10px 12px;
+          border: 1px solid #1f2937;
+          font-size: 0.9rem;
+        }
+
+        .answer-block h3 {
+          margin: 0 0 4px 0;
+          font-size: 0.95rem;
+        }
+
+        .divider {
+          border-top: 1px dashed #374151;
+          margin: 10px 0;
+        }
+
+        .small {
+          font-size: 0.8rem;
+        }
+
+        .error {
+          color: #fca5a5;
+        }
+
+        .success {
+          color: #6ee7b7;
+        }
+
+        pre {
+          margin: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <header>
+        <h1>Contract Explainer</h1>
+        <p class="subtitle">
+            Upload a contract PDF, then ask questions. Backend: Java + LegalBERT + Llama3.
+        </p>
+    </header>
+
+    <!-- Upload card -->
+    <section class="card">
+        <div class="card-title">
+            <span>1. Upload contract PDF</span>
+            <span class="badge">POST /api/contracts/upload</span>
+        </div>
+        <label for="fileInput">Choose a PDF file</label>
+        <input id="fileInput" type="file" accept="application/pdf" />
+
+        <button id="uploadBtn" class="btn">
+            ⬆️ Upload &amp; summarize
+        </button>
+
+        <div id="uploadStatus" class="status"></div>
+
+        <div class="divider"></div>
+
+        <div class="grid">
+            <div>
+                <div class="label-text">Current contract ID</div>
+                <div id="contractIdDisplay" class="mono muted">– none uploaded yet –</div>
+            </div>
+            <div>
+                <div class="label-text">Summary</div>
+                <div id="summaryDisplay" class="mono muted">
+                    Upload a contract to see the LLM summary here.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ask card -->
+    <section class="card">
+        <div class="card-title">
+            <span>2. Ask a question about this contract</span>
+            <span class="badge">POST /api/contracts/{id}/ask</span>
+        </div>
+
+        <label for="questionInput">Your question</label>
+        <input
+                id="questionInput"
+                type="text"
+                placeholder="e.g. If I resign, how much notice do I need to give?"
+        />
+
+        <button id="askBtn" class="btn secondary">
+            💬 Ask
+        </button>
+
+        <div id="askStatus" class="status"></div>
+
+        <div class="divider"></div>
+
+        <div class="grid">
+            <div>
+                <div class="label-text">Matched clause</div>
+                <div id="clauseMeta" class="muted small">
+                    No question asked yet.
+                </div>
+            </div>
+            <div>
+                <div class="label-text">Clause snippet</div>
+                <div id="clauseSnippet" class="mono muted small">
+                    When you ask a question, the backend will pick the most relevant clause and show a short snippet here.
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div>
+            <div class="label-text">Answer</div>
+            <div id="answerBlock" class="answer-block muted">
+                No answer yet. Ask a question after uploading a contract.
+            </div>
+        </div>
+    </section>
+
+    <!-- Raw debug JSON (optional) -->
+    <section class="card">
+        <div class="card-title">
+            <span>Debug: raw JSON response</span>
+            <span class="badge">for devs</span>
+        </div>
+        <pre id="debugJson" class="mono small muted">{}</pre>
+    </section>
+</div>
+
+<script>
+    const uploadBtn = document.getElementById("uploadBtn");
+    const askBtn = document.getElementById("askBtn");
+    const fileInput = document.getElementById("fileInput");
+    const questionInput = document.getElementById("questionInput");
+
+    const uploadStatus = document.getElementById("uploadStatus");
+    const contractIdDisplay = document.getElementById("contractIdDisplay");
+    const summaryDisplay = document.getElementById("summaryDisplay");
+
+    const askStatus = document.getElementById("askStatus");
+    const clauseMeta = document.getElementById("clauseMeta");
+    const clauseSnippet = document.getElementById("clauseSnippet");
+    const answerBlock = document.getElementById("answerBlock");
+
+    const debugJson = document.getElementById("debugJson");
+
+    let currentContractId = null;
+
+    function setUploadStatus(message, isError = false) {
+      uploadStatus.textContent = message;
+      uploadStatus.className = "status " + (isError ? "error" : "success");
+    }
+
+    function setAskStatus(message, isError = false) {
+      askStatus.textContent = message;
+      askStatus.className = "status " + (isError ? "error" : "success");
+    }
+
+    uploadBtn.addEventListener("click", async () => {
+      const file = fileInput.files[0];
+      if (!file) {
+        setUploadStatus("Please select a PDF file first.", true);
+        return;
+      }
+
+      setUploadStatus("Uploading and summarizing...", false);
+      uploadBtn.disabled = true;
+
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const resp = await fetch("/api/contracts/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!resp.ok) {
+          const text = await resp.text();
+          throw new Error("Upload failed: " + resp.status + " " + text);
+        }
+
+        const data = await resp.json();
+        currentContractId = data.contractId;
+
+        contractIdDisplay.textContent = data.contractId || "(missing)";
+        summaryDisplay.textContent = data.summary || "(no summary)";
+        debugJson.textContent = JSON.stringify(data, null, 2);
+
+        setUploadStatus("Upload successful. Contract ID stored.", false);
+      } catch (err) {
+        console.error(err);
+        setUploadStatus(err.message || "Upload failed.", true);
+      } finally {
+        uploadBtn.disabled = false;
+      }
+    });
+
+    askBtn.addEventListener("click", async () => {
+      if (!currentContractId) {
+        setAskStatus("Please upload a contract first.", true);
+        return;
+      }
+
+      const question = questionInput.value.trim();
+      if (!question) {
+        setAskStatus("Please enter a question.", true);
+        return;
+      }
+
+      setAskStatus("Sending question to backend...", false);
+      askBtn.disabled = true;
+
+      try {
+        const resp = await fetch(`/api/contracts/${encodeURIComponent(currentContractId)}/ask`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ question }),
+        });
+
+        if (!resp.ok) {
+          const text = await resp.text();
+          throw new Error("Ask failed: " + resp.status + " " + text);
+        }
+
+        const data = await resp.json();
+        debugJson.textContent = JSON.stringify(data, null, 2);
+
+        // ---------- Nicely format the answer ----------
+        const rawAnswer = data.answer || "";
+
+        if (!rawAnswer) {
+          answerBlock.textContent = "(no answer returned)";
+        } else {
+          const explanationMarker = "Explanation:";
+          const explIndex = rawAnswer.indexOf(explanationMarker);
+
+          let relevantPart = rawAnswer;
+          let explanationPart = "";
+
+          if (explIndex !== -1) {
+            relevantPart = rawAnswer.substring(0, explIndex).trim();
+            explanationPart = rawAnswer
+              .substring(explIndex + explanationMarker.length)
+              .trim();
+          }
+
+          const relevantLabel = "Relevant contract text:";
+          let relevantBody = relevantPart;
+          const relIndex = relevantPart.toLowerCase().indexOf(relevantLabel.toLowerCase());
+          if (relIndex !== -1) {
+            relevantBody = relevantPart
+              .substring(relIndex + relevantLabel.length)
+              .trim();
+          }
+
+          function escapeAndFormat(text) {
+            const escaped = text
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;");
+            return escaped.replace(/\n/g, "<br>");
+          }
+
+          let html = "";
+
+          if (relevantBody) {
+            html += `<h3>Relevant contract text</h3>`;
+            html += `<div class="mono small">${escapeAndFormat(relevantBody)}</div>`;
+          }
+
+          if (explanationPart) {
+            html += `<div class="divider"></div>`;
+            html += `<h3>Explanation</h3>`;
+            html += `<div class="small">${escapeAndFormat(explanationPart)}</div>`;
+          }
+
+          if (!html) {
+            html = `<div class="small">${escapeAndFormat(rawAnswer)}</div>`;
+          }
+
+          answerBlock.innerHTML = html;
+        }
+        // ---------- End formatting ----------
+
+        // Clause meta
+        if (data.clauseId || data.clauseLabel) {
+          const idPart = data.clauseId ? `<span class="pill-label">ID:</span> ${data.clauseId}` : "";
+          const labelPart = data.clauseLabel
+            ? `<span class="pill-label">Label:</span> ${data.clauseLabel}`
+            : "";
+          clauseMeta.innerHTML =
+            `<span class="pill">${idPart}</span>` +
+            (labelPart
+              ? ` <span class="pill">${labelPart}</span>`
+              : "");
+        } else {
+          clauseMeta.textContent =
+            "No specific clause was chosen (fallback to full contract).";
+        }
+
+        // Clause snippet
+        if (data.clauseText) {
+          clauseSnippet.textContent = data.clauseText;
+        } else {
+          clauseSnippet.textContent =
+            "No snippet available. The full contract may have been used as context.";
+        }
+
+        setAskStatus("Answer received.", false);
+      } catch (err) {
+        console.error(err);
+        setAskStatus(err.message || "Ask failed.", true);
+      } finally {
+        askBtn.disabled = false;
+      }
+    });
+</script>
+</body>
+</html>
